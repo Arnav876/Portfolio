@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowDown, Linkedin, ArrowUpRight, Volume2, VolumeX, X, Zap, Github, Layers, Wrench, Trophy, Mail } from 'lucide-react';
 import { sound } from '../utils/audio';
 import { RaceBadge } from './RaceBadge';
+import { LiquidMask } from './LiquidMask';
 
 interface HeroProps {
   raceMode?: boolean;
@@ -9,7 +10,6 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ raceMode = false, setRaceMode }) => {
-  const [iframeLoaded, setIframeLoaded] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(sound.enabled);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -75,24 +75,44 @@ export const Hero: React.FC<HeroProps> = ({ raceMode = false, setRaceMode }) => 
         backgroundColor: '#ffffff'
       }}
     >
-      {/* Interactive Framer Canvas */}
-      <iframe
-        src="/framer-hero.html"
-        title="Arnav Yadav // Interactive Reveal Hero"
-        onLoad={() => setIframeLoaded(true)}
+      {/* Background grid/pattern layer (matching subtle Framer motorsport grain) */}
+      <div
         style={{
-          width: '100%',
-          height: '100%',
-          border: 'none',
-          display: 'block',
           position: 'absolute',
           inset: 0,
-          zIndex: 1,
-          backgroundColor: '#ffffff',
-          opacity: iframeLoaded ? 1 : 0.85,
-          transition: 'opacity 0.4s ease'
+          backgroundImage: 'url(/assets/hero/bg-pattern.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          opacity: 0.25,
+          zIndex: 0,
+          pointerEvents: 'none'
         }}
       />
+
+      {/* Interactive WebGL Helmet Reveal (Liquid Mask) */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 1,
+          backgroundColor: '#ffffff'
+        }}
+      >
+        <LiquidMask
+          imageBase={{ src: '/assets/hero/face.png', alt: 'Arnav Yadav' }}
+          imageHover={{ src: '/assets/hero/helmet.webp', alt: 'Arnav Yadav Racing Helmet' }}
+          curl={75}
+          circleBoost={0.4}
+          texture={0.4}
+          shrinkTimeSeconds={2}
+          splatRadius={0.11}
+          parallax={true}
+          parallaxAmount={5}
+          parallaxSmoothing={1}
+        />
+      </div>
 
       {/* Hero UI Overlay Container - pointer-events: none allows mouse to interact with canvas */}
       <div className="hero-overlay-container">
