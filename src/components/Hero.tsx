@@ -3,6 +3,7 @@ import { ArrowDown, Linkedin, ArrowUpRight, Volume2, VolumeX, X, Zap, Github, La
 import { sound } from '../utils/audio';
 import { RaceBadge } from './RaceBadge';
 import { LiquidMask } from './LiquidMask';
+import { InteractiveWaveBackground } from './InteractiveWaveBackground';
 
 interface HeroProps {
   raceMode?: boolean;
@@ -89,6 +90,17 @@ export const Hero: React.FC<HeroProps> = ({ raceMode = false, setRaceMode }) => 
         }}
       />
 
+      {/* Interactive Wave Background (the topographic contour side lines) */}
+      <InteractiveWaveBackground
+        strokeColor="rgb(227, 227, 227)"
+        lineSpacing={0.85}
+        resolution={0.7}
+        waveSpeed={0.5}
+        waveAmplitude={0.6}
+        mouseInfluence={1}
+        style={{ zIndex: 1 }}
+      />
+
       {/* Interactive WebGL Helmet Reveal (Liquid Mask) */}
       <div
         style={{
@@ -96,8 +108,8 @@ export const Hero: React.FC<HeroProps> = ({ raceMode = false, setRaceMode }) => 
           inset: 0,
           width: '100%',
           height: '100%',
-          zIndex: 1,
-          backgroundColor: '#ffffff'
+          zIndex: 2,
+          backgroundColor: 'transparent'
         }}
       >
         <LiquidMask

@@ -699,6 +699,7 @@ body.race-mode .hero-menu-btn .menu-bar {
   .scroll-stack-section[data-index="0"] .scroll-stack-card > section {
     display: block;
     padding: 0 !important;
+    background-color: #ffffff !important;
   }
 
   /* Compact section header typography for full-viewport fit */
