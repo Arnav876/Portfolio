@@ -25,3 +25,7 @@ dist-ssr
 
 # Playwright MCP artifacts
 .playwright-mcp/
+.agents/hooks.json
+.cursor/hooks.json
+.antideploy.json
+

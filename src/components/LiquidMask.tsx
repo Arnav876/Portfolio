@@ -463,7 +463,7 @@ export const LiquidMask: React.FC<LiquidMaskProps> = ({
         vec2 sampleUV = baseUV + parallaxUV;
 
         vec4 frontColor = texture2D(u_frontImage, sampleUV);
-        float outAlpha = frontColor.a * finalMask;
+        float outAlpha = frontColor.a * finalMask * clamp(u_progress, 0.0, 1.0);
         if (outAlpha < 0.01) outAlpha = 0.0;
 
         gl_FragColor = vec4(frontColor.rgb, outAlpha);
@@ -581,7 +581,6 @@ export const LiquidMask: React.FC<LiquidMaskProps> = ({
     });
 
     const sizes = new Vector2();
-    let cachedBounds = container.getBoundingClientRect();
 
     const updateFromDOM = () => {
       const actualWidth = Math.max(container.clientWidth, 2);
@@ -598,7 +597,6 @@ export const LiquidMask: React.FC<LiquidMaskProps> = ({
       uniforms.u_planeRes.value.set(actualWidth, actualHeight);
       uniforms.u_windowSize.value.set(window.innerWidth, window.innerHeight);
       const containerRect = container.getBoundingClientRect();
-      cachedBounds = containerRect;
       uniforms.u_containerOffset.value.set(containerRect.left, containerRect.top);
 
       const containerAspect = actualWidth / actualHeight;
@@ -622,7 +620,8 @@ export const LiquidMask: React.FC<LiquidMaskProps> = ({
     let isIntersecting = true;
     let isPageVisible = document.visibilityState === 'visible';
     let hoverActive = false;
-    let settleUntil = 0;
+    let lastMoveTime = 0;
+    let hasMouseMoved = false;
     let targetProgress = 0;
     let rafId = 0;
     const clock = new Clock();
@@ -631,12 +630,25 @@ export const LiquidMask: React.FC<LiquidMaskProps> = ({
     updateFromDOM();
 
     const shouldAnimate = () => {
-      return isPageVisible && isIntersecting && (hoverActive || performance.now() < settleUntil);
+      return isPageVisible && isIntersecting && (hoverActive || uniforms.u_progress.value > 0.001);
     };
 
     const render = () => {
       if (!shouldAnimate()) {
         isAnimating = false;
+        // When stopping, ensure the canvas and density FBOs are 100% clean
+        if (targetProgress === 0 && uniforms.u_progress.value <= 0.005) {
+          uniforms.u_progress.value = 0;
+          renderer.clear();
+          const gl = renderer.getContext();
+          gl.clearColor(0, 0, 0, 0);
+          renderer.setRenderTarget(densityFBO0);
+          gl.clear(gl.COLOR_BUFFER_BIT);
+          renderer.setRenderTarget(densityFBO1);
+          gl.clear(gl.COLOR_BUFFER_BIT);
+          renderer.setRenderTarget(null);
+          renderer.clear();
+        }
         return;
       }
       isAnimating = true;
@@ -688,6 +700,13 @@ export const LiquidMask: React.FC<LiquidMaskProps> = ({
       const gl = renderer.getContext();
       gl.disable(gl.BLEND);
 
+      // Check for idle mouse: if cursor has stopped moving for > 1.2s, smoothly dissipate
+      const speed = Math.hypot(mouseVelocity.x, mouseVelocity.y);
+      const isIdle = performance.now() - lastMoveTime > 1200;
+      if (isIdle || !hoverActive) {
+        targetProgress = 0;
+      }
+
       // 1) Splat velocity
       splatVelMaterial.uniforms.u_point.value.set(mouseTarget.x, mouseTarget.y);
       splatVelMaterial.uniforms.u_aspectRatio.value = containerAspect;
@@ -698,11 +717,14 @@ export const LiquidMask: React.FC<LiquidMaskProps> = ({
       renderer.setRenderTarget(velFBO1);
       renderer.render(fluidScene, orthoCamera);
 
-      // 2) Splat density
+      // 2) Splat density - only inject new density when mouse is actively moving
+      const densityAmt = (hoverActive && !isIdle && (speed > 0.0003 || hasMouseMoved)) ? 1.0 : 0.0;
+      hasMouseMoved = false;
+
       splatDensityMaterial.uniforms.u_point.value.set(mouseTarget.x, mouseTarget.y);
       splatDensityMaterial.uniforms.u_aspectRatio.value = containerAspect;
       splatDensityMaterial.uniforms.u_radius.value = splatRad;
-      splatDensityMaterial.uniforms.u_densityAmount.value = 1;
+      splatDensityMaterial.uniforms.u_densityAmount.value = densityAmt;
       splatDensityMaterial.uniforms.u_target.value = densityFBO0.texture;
       quadMesh.material = splatDensityMaterial;
       renderer.setRenderTarget(densityFBO1);
@@ -777,6 +799,9 @@ export const LiquidMask: React.FC<LiquidMaskProps> = ({
 
       uniforms.u_densityTex.value = densityFBO0.texture;
       uniforms.u_progress.value += (targetProgress - uniforms.u_progress.value) * 0.08;
+      if (targetProgress === 0 && uniforms.u_progress.value <= 0.005) {
+        uniforms.u_progress.value = 0;
+      }
 
       renderer.render(scene, camera);
 
@@ -784,6 +809,10 @@ export const LiquidMask: React.FC<LiquidMaskProps> = ({
         rafId = requestAnimationFrame(render);
       } else {
         isAnimating = false;
+        // Clean frame on stop
+        if (targetProgress === 0 && uniforms.u_progress.value === 0) {
+          renderer.clear();
+        }
       }
     };
 
@@ -814,36 +843,45 @@ export const LiquidMask: React.FC<LiquidMaskProps> = ({
     };
     document.addEventListener('visibilitychange', onVisibilityChange);
 
-    const onScroll = () => {
-      cachedBounds = container.getBoundingClientRect();
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-
     const parallaxPx = parallax ? Math.max(0, Math.min(200, parallaxAmount ?? 0)) : 0;
 
     const onMove = (e: MouseEvent) => {
-      if (!hoverActive) {
-        hoverActive = true;
-        settleUntil = Number.POSITIVE_INFINITY;
-        targetProgress = 1;
+      const rect = container.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return;
+
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = 1 - (e.clientY - rect.top) / rect.height;
+
+      // Check if cursor is within the container bounds
+      if (x < -0.05 || x > 1.05 || y < -0.05 || y > 1.05) {
+        if (hoverActive) {
+          hoverActive = false;
+          targetProgress = 0;
+        }
+        return;
       }
-      if (!isAnimating && shouldAnimate()) {
-        render();
-      }
-      const x = (e.clientX - cachedBounds.left) / cachedBounds.width;
-      const y = 1 - (e.clientY - cachedBounds.top) / cachedBounds.height;
+
       const nx = Math.max(0, Math.min(1, x));
       const ny = Math.max(0, Math.min(1, y));
+
       uniforms.u_mouse.value.set(nx, ny);
+      lastMoveTime = performance.now();
+      hasMouseMoved = true;
+      hoverActive = true;
+      targetProgress = 1;
 
       if (parallax && parallaxPx > 0) {
         const offsetX = Math.max(-parallaxPx, Math.min(parallaxPx, (nx - 0.5) * 2 * parallaxPx));
         const offsetY = Math.max(-parallaxPx, Math.min(parallaxPx, (ny - 0.5) * 2 * parallaxPx));
         targetParallaxOffset.set(offsetX, offsetY);
       }
+
+      if (!isAnimating) {
+        render();
+      }
     };
 
-    const onEnter = () => {
+    const onEnter = (e: MouseEvent) => {
       const gl = renderer.getContext();
       gl.clearColor(0, 0, 0, 0);
       renderer.setRenderTarget(densityFBO0);
@@ -856,8 +894,18 @@ export const LiquidMask: React.FC<LiquidMaskProps> = ({
       gl.clear(gl.COLOR_BUFFER_BIT);
       renderer.setRenderTarget(null);
 
+      const rect = container.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        const nx = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        const ny = Math.max(0, Math.min(1, 1 - (e.clientY - rect.top) / rect.height));
+        uniforms.u_mouse.value.set(nx, ny);
+        lastMouseUV.x = nx;
+        lastMouseUV.y = ny;
+      }
+
       hoverActive = true;
-      settleUntil = Number.POSITIVE_INFINITY;
+      lastMoveTime = performance.now();
+      hasMouseMoved = true;
       targetProgress = 1;
 
       if (!isAnimating) {
@@ -867,7 +915,6 @@ export const LiquidMask: React.FC<LiquidMaskProps> = ({
 
     const onLeave = () => {
       hoverActive = false;
-      settleUntil = performance.now() + Math.max(0.5, shrinkTimeSeconds) * 1000 + 250;
       targetProgress = 0;
       targetParallaxOffset.set(0, 0);
       if (!parallax || Math.max(0, Math.min(1, parallaxSmoothing ?? 0)) === 0) {
@@ -885,7 +932,6 @@ export const LiquidMask: React.FC<LiquidMaskProps> = ({
       if (rafId) cancelAnimationFrame(rafId);
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
-      window.removeEventListener('scroll', onScroll);
       document.removeEventListener('visibilitychange', onVisibilityChange);
       heroSection.removeEventListener('mousemove', onMove as EventListener);
       heroSection.removeEventListener('mouseenter', onEnter);

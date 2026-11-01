@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 
 interface InteractiveWaveBackgroundProps {
   strokeColor?: string;
+  strokeWidth?: number;
   backgroundColor?: string;
   waveSpeed?: number;
   waveAmplitude?: number;
@@ -94,7 +95,8 @@ interface PointData {
 }
 
 export const InteractiveWaveBackground: React.FC<InteractiveWaveBackgroundProps> = ({
-  strokeColor = 'rgb(227, 227, 227)',
+  strokeColor = 'rgba(0, 0, 0, 0.14)',
+  strokeWidth = 1.25,
   backgroundColor = 'transparent',
   waveSpeed = 0.5,
   waveAmplitude = 0.6,
@@ -163,14 +165,12 @@ export const InteractiveWaveBackground: React.FC<InteractiveWaveBackgroundProps>
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path.setAttribute('fill', 'none');
         path.setAttribute('stroke', strokeColor);
-        path.setAttribute('stroke-width', '1');
+        path.setAttribute('stroke-width', String(strokeWidth));
         svg.appendChild(path);
         linesRef.current.push(path);
         pointsRef.current.push(linePoints);
       }
     };
-
-    buildLines();
 
     const getPtPos = (pt: PointData, applyCursor = true) => ({
       x: pt.x + pt.wave.x + (applyCursor ? pt.cursor.x : 0),
@@ -243,8 +243,15 @@ export const InteractiveWaveBackground: React.FC<InteractiveWaveBackgroundProps>
       }
     };
 
+    buildLines();
+    updatePhysics(0);
+    renderLines();
+
     const tick = (time: number) => {
-      if (!isIntersectingRef.current) return;
+      if (!isIntersectingRef.current) {
+        rafRef.current = null;
+        return;
+      }
       rafRef.current = requestAnimationFrame(tick);
 
       const c = cursorRef.current;
@@ -349,3 +356,4 @@ export const InteractiveWaveBackground: React.FC<InteractiveWaveBackgroundProps>
     </div>
   );
 };
+

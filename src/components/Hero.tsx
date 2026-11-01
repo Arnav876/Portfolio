@@ -4,6 +4,7 @@ import { sound } from '../utils/audio';
 import { RaceBadge } from './RaceBadge';
 import { LiquidMask } from './LiquidMask';
 import { InteractiveWaveBackground } from './InteractiveWaveBackground';
+import { WireframeScaffold } from './WireframeScaffold';
 
 interface HeroProps {
   raceMode?: boolean;
@@ -76,23 +77,13 @@ export const Hero: React.FC<HeroProps> = ({ raceMode = false, setRaceMode }) => 
         backgroundColor: '#ffffff'
       }}
     >
-      {/* Background grid/pattern layer (matching subtle Framer motorsport grain) */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: 'url(/assets/hero/bg-pattern.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          opacity: 0.25,
-          zIndex: 0,
-          pointerEvents: 'none'
-        }}
-      />
+      {/* Dynamic 3D Wireframe Scaffold (Scanning Radar Dome behind head) */}
+      <WireframeScaffold style={{ zIndex: 0 }} />
 
       {/* Interactive Wave Background (the topographic contour side lines) */}
       <InteractiveWaveBackground
-        strokeColor="rgb(227, 227, 227)"
+        strokeColor={raceMode ? 'rgba(255, 255, 255, 0.22)' : 'rgba(0, 0, 0, 0.14)'}
+        strokeWidth={1.25}
         lineSpacing={0.85}
         resolution={0.7}
         waveSpeed={0.5}
