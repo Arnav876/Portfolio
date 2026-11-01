@@ -6,11 +6,11 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
     title: 'Languages & Core Systems',
     iconName: 'Cpu',
     skills: [
-      { name: 'TypeScript', level: 'Advanced', levelPercent: 92, description: 'Type-safe architecture, generics, strict compiler configs, AST' },
-      { name: 'Python', level: 'Proficient', levelPercent: 88, description: 'PyTorch ML pipelines, NumPy, Pandas, algorithmic workflows' },
-      { name: 'JavaScript (ESNext)', level: 'Advanced', levelPercent: 95, description: 'Modern async/await, DOM APIs, Web Audio, Speech APIs' },
-      { name: 'C / C++', level: 'Intermediate', levelPercent: 74, description: 'Data structures, memory layouts, algorithmic problem solving' },
-      { name: 'SQL', level: 'Proficient', levelPercent: 82, description: 'Relational schemas, queries, SQLite native, indexing' }
+      { name: 'TypeScript', level: 'Advanced', levelPercent: 94, description: 'Type-safe architecture, generics, strict compiler configs, AST' },
+      { name: 'Python', level: 'Proficient', levelPercent: 90, description: 'PyTorch ML pipelines, NumPy, Pandas, algorithmic data flows' },
+      { name: 'JavaScript (ESNext)', level: 'Advanced', levelPercent: 95, description: 'Modern async/await, DOM APIs, Web Audio, Web Speech APIs' },
+      { name: 'C / C++', level: 'Intermediate', levelPercent: 78, description: 'Memory layout, data structures, low-overhead algorithms' },
+      { name: 'SQL', level: 'Proficient', levelPercent: 85, description: 'Relational schemas, queries, zero-daemon SQLite embedded' }
     ]
   },
   {
@@ -18,83 +18,74 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
     title: 'Frontend & Reactive UI',
     iconName: 'Layout',
     skills: [
-      { name: 'React 19', level: 'Advanced', levelPercent: 94, description: 'Hooks, concurrent features, component state machines' },
-      { name: 'Vite Ecosystem', level: 'Advanced', levelPercent: 90, description: 'HMR, bundler plugins, asset pipelines, fast builds' },
+      { name: 'React 19', level: 'Advanced', levelPercent: 95, description: 'Hooks, concurrent features, component state machines, sub-50ms UI' },
       { name: 'Modern CSS & Animation', level: 'Advanced', levelPercent: 92, description: 'Design tokens, CSS grid, keyframes, fluid typography, dark mode' },
-      { name: 'GIS & Leaflet', level: 'Proficient', levelPercent: 80, description: 'Spatial polygons, map layers, GeoJSON conflict buffers' },
-      { name: 'Web APIs', level: 'Proficient', levelPercent: 85, description: 'Web Audio API, SpeechRecognition, IntersectionObserver' }
+      { name: 'Vite Ecosystem', level: 'Advanced', levelPercent: 90, description: 'HMR, bundler plugins, asset pipelines, fast production builds' },
+      { name: 'Web Speech & Audio APIs', level: 'Proficient', levelPercent: 88, description: 'Offline-ready voice check-ins, custom sound synthesis' },
+      { name: 'Performance & Profiling', level: 'Proficient', levelPercent: 88, description: 'Lighthouse 95+, 60 FPS scroll, DOM paint optimization' }
     ]
   },
   {
     sector: 'SECTOR-03',
-    title: 'Backend & Data Architecture',
+    title: 'Backend, AI & Robotics',
     iconName: 'Server',
     skills: [
-      { name: 'Node.js & Express', level: 'Advanced', levelPercent: 88, description: 'REST APIs, middleware architectures, stream processing' },
-      { name: 'Native node:sqlite', level: 'Proficient', levelPercent: 86, description: 'Zero-daemon embedded relational storage in Node 22+' },
-      { name: 'Cryptography & Auth', level: 'Proficient', levelPercent: 80, description: 'PBKDF2 SHA-512, JWT tokens, secure headers' },
-      { name: 'Combinatorial Optimization', level: 'Advanced', levelPercent: 90, description: 'Deterministic basket optimizers, integer paise arithmetic' }
-    ]
-  },
-  {
-    sector: 'SECTOR-04',
-    title: 'AI, ML & Tooling',
-    iconName: 'Layers',
-    skills: [
-      { name: 'PyTorch & Scikit-Learn', level: 'Proficient', levelPercent: 82, description: 'Neural classification models, stratified cross-validation' },
-      { name: 'Git & Version Control', level: 'Advanced', levelPercent: 90, description: 'Monorepos, branch strategies, clean commit history' },
-      { name: 'Turborepo / Monorepos', level: 'Proficient', levelPercent: 80, description: 'Multi-package dependency orchestration & build pipelines' },
-      { name: 'Performance & Profiling', level: 'Proficient', levelPercent: 85, description: 'Lighthouse 95+, 60 FPS scroll, paint optimization' }
+      { name: 'Node.js & Express', level: 'Advanced', levelPercent: 90, description: 'REST APIs, middleware pipelines, high-concurrency event loops' },
+      { name: 'Native node:sqlite', level: 'Proficient', levelPercent: 88, description: 'Zero-daemon embedded relational storage in Node 22+' },
+      { name: 'PyTorch & Scikit-Learn', level: 'Proficient', levelPercent: 85, description: 'Deep neural networks, classification pipelines, stratified k-fold' },
+      { name: 'Robotics & Hardware Control', level: 'Proficient', levelPercent: 84, description: 'Sensor fusion, microcontroller logic, autonomous robotics telemetry' },
+      { name: 'Git & Version Control', level: 'Advanced', levelPercent: 92, description: 'Clean git hygiene, monorepos, open-source collaboration' }
     ]
   }
 ];
 
 export const MILESTONES_DATA: Milestone[] = [
   {
-    year: '2025 - Present',
-    tag: 'FLAGSHIP INNOVATION',
-    title: 'GroqAI Autonomous Quick-Commerce Optimizer',
-    role: 'Lead Architect & Engineer',
-    details: 'Architected an integer paise deterministic optimizer across 4 major Indian quick-commerce platforms evaluating 15 combinatorial subset combinations with zero LLM calculation drift.',
+    year: 'Oct 2026 - Dec 2026',
+    tag: 'INDUSTRY EXPERIENCE',
+    title: 'Software Engineering Intern & Freelancer — Admission By Choice',
+    role: 'Full-Stack Developer & Systems Intern',
+    details: 'Engineered scalable web solutions, automated counseling pipelines, and high-performance client applications for educational advisory platform Admission By Choice (October 2026 – December 2026).',
     highlights: [
-      'Engineered integer-paise math preventing floating point currency rounding errors',
-      'Implemented NullCartAdapter zero-credential client privacy protocol',
-      'Built multi-platform price scrapers & comparison telemetry'
-    ]
-  },
-  {
-    year: '2024 - 2025',
-    tag: 'NATIONAL HACKATHON',
-    title: 'Smart India Hackathon (SIH) - NyayaSetu',
-    role: 'Full-Stack & Systems Lead',
-    details: 'Developed NyayaSetu, an AI-assisted undertrial justice coordination system ensuring zero procedural delay overstays across custody and court rosters.',
-    highlights: [
-      'Built native zero-daemon relational system using Node 22 node:sqlite',
-      'Integrated offline multilingual voice check-ins with Web Speech API',
-      'Engineered detention half-term early intervention alerting'
+      'Developed and optimized core full-stack features using modern React, TypeScript, and Node.js',
+      'Automated candidate data management workflows and lead progression pipelines',
+      'Delivered custom freelance portal enhancements with responsive mobile-first architecture'
     ]
   },
   {
     year: '2024',
-    tag: 'CIVIC INFRASTRUCTURE',
-    title: 'CivicSync GIS Coordination Engine',
-    role: 'System Architect',
-    details: 'Built an interdepartmental urban GIS system to solve redundant municipal road excavations using spatial buffer clash detection and synchronized permits.',
+    tag: 'FIRST PLACE WINNER',
+    title: 'Winner — Summer of Projects (Robotics & Hardware Systems)',
+    role: 'Lead Robotics Engineer & Systems Architect',
+    details: 'Secured 1st place in the prestigious Summer of Projects competition by designing, engineering, and programming autonomous robotics systems and hardware sensor telemetry.',
     highlights: [
-      'Real-time GeoJSON spatial intersection clash detection',
-      'Unified trench-sharing scheduling engine for municipal boards',
-      'Custom interactive mapping telemetry interface'
+      'Engineered autonomous robotics hardware with sensor telemetry and real-time response loops',
+      'Designed microcontroller embedded logic and motor control algorithms for obstacle maneuvering',
+      'Won 1st place overall in project demonstration and engineering technical evaluation'
     ]
   },
   {
-    year: '2023 - 2024',
-    tag: 'MACHINE LEARNING',
-    title: 'Clinical Neural Risk Predictor',
-    role: 'ML Developer',
-    details: 'Constructed deep neural networks in PyTorch for early disease diagnosis, applying stratified cross-validation and feature correlation matrices.',
+    year: '2024',
+    tag: 'NATIONAL HACKATHON',
+    title: 'Smart India Hackathon (SIH) — NyayaSetu Platform',
+    role: 'Full-Stack & Systems Lead',
+    details: 'Developed NyayaSetu (न्यायसेतु), an AI-assisted undertrial legal aid coordination platform preventing procedural detention delays across custody and court rosters.',
     highlights: [
-      'PyTorch deep neural network with custom regularized loss functions',
-      'Explainable AI metrics with risk confidence distribution output'
+      'Built native zero-daemon relational system using Node 22 node:sqlite and PBKDF2 hashing',
+      'Integrated offline multilingual voice check-ins with browser native Web Speech API',
+      'Engineered detention half-term early intervention alerting engine'
+    ]
+  },
+  {
+    year: '2024 - Present',
+    tag: 'COMMUNITY & OPEN SOURCE',
+    title: 'Active Open Source Contributor',
+    role: 'Open Source Software Engineer',
+    details: 'Dedicated contributor across open-source developer tooling, accessible web utilities, machine learning pipelines, and public repositories on GitHub.',
+    highlights: [
+      'Built and open-sourced end-to-end reproducible projects including NyayaSetu and CampusBites',
+      'Contributed bug fixes, performance optimizations, and documentation across ecosystem tools',
+      'Committed to deterministic, zero-dependency, and accessible code standards'
     ]
   }
 ];

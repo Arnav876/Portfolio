@@ -2,62 +2,6 @@ import { Project } from '../types';
 
 export const PROJECTS_DATA: Project[] = [
   {
-    id: 'groc-ai',
-    title: 'GroqAI',
-    subtitle: 'Quick-Commerce Price & Basket Optimizer',
-    tagline: 'Autonomous, deterministic multi-platform basket optimizer saving up to 28% across Blinkit, Zepto, Swiggy Instamart, and BigBasket.',
-    category: 'AI & Optimization',
-    badge: 'OPTIMIZATION ENGINE',
-    description: 'Autonomous basket optimizer that computes theoretical item-by-item minima, single-store baselines, and multi-platform subset splits (all 15 platform combinations) factoring delivery, platform, and surge fees.',
-    longDescription: [
-      'Engineered with strict non-negotiable invariants: all financial calculations are processed in integer paise (1 INR = 100 paise) to eliminate floating-point drift entirely.',
-      'Deterministic calculation core ensures no LLM hallucination in pricing truth. Missing fees preserve range bounds ({ minPaise, maxPaise }) rather than erroneously assuming zero.',
-      'Features NullCartAdapter ensuring zero-credential security: GroqAI never accesses OTPs or simulates checkout; users execute transparent checkouts directly with retailers.'
-    ],
-    techStack: ['TypeScript', 'React 19', 'Turborepo', 'Vite', 'Node.js', 'Deterministic Math'],
-    keyInvariants: [
-      'Integer Paise Financial Precision (0 float drift)',
-      'Deterministic 15-subset combinatorial pricing',
-      'Honest capability contracts (zero-credential security)'
-    ],
-    githubUrl: 'https://github.com/Arnav876/GrocAI',
-    metrics: [
-      { label: 'Platform Matrix', value: '4 Major Apps' },
-      { label: 'Evaluation Subsets', value: '15 Combos' },
-      { label: 'Financial Drift', value: '0.00%' }
-    ],
-    featured: true,
-    telemetrySector: 'SECTOR-1'
-  },
-  {
-    id: 'civicsync-gis',
-    title: 'CivicSync GIS',
-    subtitle: 'Interdepartmental Urban Coordination Platform',
-    tagline: 'Spatial clash-detection and GIS coordination system uniting municipal utilities to end redundant road digs.',
-    category: 'Civic & Systems',
-    badge: 'CIVIC TECH / GIS',
-    description: 'An enterprise-grade GIS platform engineered to synchronize municipal road-cut excavations across telecommunications, water supply, gas networks, and civic authorities.',
-    longDescription: [
-      'Detects spatial and temporal overlaps in planned municipal infrastructure work using GeoJSON polygon intersections and project timeline buffer analysis.',
-      'Eliminates duplicate road excavations by enforcing unified trench-sharing policies and automated permit scheduling across siloed municipal departments.',
-      'Interactive spatial map canvas renders live layers with conflict alerts, agency jurisdiction boundaries, and automated moratorium checks.'
-    ],
-    techStack: ['TypeScript', 'Vite', 'Leaflet / GIS', 'GeoJSON', 'Node.js', 'Express'],
-    keyInvariants: [
-      'Multi-agency spatial conflict detection',
-      'Dynamic temporal trench moratorium enforcement',
-      'Zero-dependency lightweight GeoJSON processing'
-    ],
-    githubUrl: 'https://github.com/Arnav876/CivivSync',
-    metrics: [
-      { label: 'Conflict Engine', value: 'Spatial Buffer' },
-      { label: 'Map Layers', value: 'Multi-Agency' },
-      { label: 'Permit Lifecycle', value: 'Automated' }
-    ],
-    featured: true,
-    telemetrySector: 'SECTOR-2'
-  },
-  {
     id: 'nyayasetu',
     title: 'NyayaSetu (न्यायसेतु)',
     subtitle: 'Undertrial Justice Coordination & Early-Action Platform',
@@ -83,7 +27,7 @@ export const PROJECTS_DATA: Project[] = [
       { label: 'Voice Q&A', value: 'Multilingual' }
     ],
     featured: true,
-    telemetrySector: 'SECTOR-3'
+    telemetrySector: 'SECTOR-1'
   },
   {
     id: 'campus-bites',
@@ -110,8 +54,8 @@ export const PROJECTS_DATA: Project[] = [
       { label: 'Latency', value: '<50ms' },
       { label: 'Workflow', value: 'Full KOD' }
     ],
-    featured: false,
-    telemetrySector: 'SECTOR-1'
+    featured: true,
+    telemetrySector: 'SECTOR-2'
   },
   {
     id: 'diabetes-predictor',
@@ -138,35 +82,7 @@ export const PROJECTS_DATA: Project[] = [
       { label: 'Evaluation', value: 'Stratified K-Fold' },
       { label: 'Processing', value: 'NumPy / Pandas' }
     ],
-    featured: false,
-    telemetrySector: 'SECTOR-2'
-  },
-  {
-    id: 'ai-trip-planner',
-    title: 'AI Trip Architect & Deck Generator',
-    subtitle: 'Contextual Multi-Day Itinerary Synthesizer',
-    tagline: 'Automated itinerary synthesizer converting user travel preferences into day-by-day itineraries and presentation decks.',
-    category: 'Full-Stack Web',
-    badge: 'AUTOMATION & EXPORT',
-    description: 'Web application that generates rich multi-day travel itineraries and programmatically creates downloadable presentation decks using PPTXGenJS.',
-    longDescription: [
-      'Features a dynamic slide synthesis engine that formats complex transit routes, activity recommendations, and budget allocations into client-ready PowerPoint decks.',
-      'Utilizes fast XML parsing and dynamic client-side zip creation for zero-server export overhead.',
-      'Built with smooth fluid motion interactions and accessible responsive design.'
-    ],
-    techStack: ['React 19', 'TypeScript', 'Motion', 'PPTXGenJS', 'Fast-XML-Parser', 'Vite'],
-    keyInvariants: [
-      'Client-side slide deck compilation with zero server roundtrips',
-      'Strict schema validation for travel routes and transit legs',
-      'Deterministic visual hierarchy across exportable slides'
-    ],
-    githubUrl: 'https://github.com/Arnav876',
-    metrics: [
-      { label: 'Export Engine', value: 'Client PPTX' },
-      { label: 'Synthesis', value: 'Instant' },
-      { label: 'Motion', value: '60 FPS' }
-    ],
-    featured: false,
+    featured: true,
     telemetrySector: 'SECTOR-3'
   }
 ];

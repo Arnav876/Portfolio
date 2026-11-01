@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Cursor } from './components/Cursor';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { About } from './components/About';
 import { Projects } from './components/Projects';
 import { Skills } from './components/Skills';
 import { Milestones } from './components/Milestones';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { TelemetryHUD } from './components/TelemetryHUD';
+import { ScrollStack } from './components/ScrollStack';
 
 export const App: React.FC = () => {
   const [raceMode, setRaceMode] = useState<boolean>(false);
@@ -32,14 +32,15 @@ export const App: React.FC = () => {
       {/* Fixed Telemetry Navigation */}
       <Navbar raceMode={raceMode} setRaceMode={setRaceMode} />
 
-      {/* Main Content Sections */}
+      {/* Main Content Sections with GSAP ScrollStack */}
       <main id="main-content">
-        <Hero />
-        <About />
-        <Projects />
-        <Skills />
-        <Milestones />
-        <Contact />
+        <ScrollStack>
+          <Hero raceMode={raceMode} setRaceMode={setRaceMode} />
+          <Projects />
+          <Skills />
+          <Milestones />
+          <Contact />
+        </ScrollStack>
       </main>
 
       {/* Telemetry Footer */}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Volume2, VolumeX, Zap, Github, Menu, X } from 'lucide-react';
+import { Volume2, VolumeX, Zap, Github, Linkedin, Menu, X } from 'lucide-react';
 import { sound } from '../utils/audio';
 
 interface NavbarProps {
@@ -8,32 +8,42 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ raceMode, setRaceMode }) => {
-  const [scrolled, setScrolled] = useState(false);
-  const [audioEnabled, setAudioEnabled] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [audioEnabled, setAudioEnabled] = useState(sound.enabled);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('hero');
+  const [activeSection, setActiveSection] = useState('projects');
+
+  useEffect(() => {
+    const unsub = sound.subscribe((enabled) => {
+      setAudioEnabled(enabled);
+    });
+    return unsub;
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
+      // Exiting the front page: slide in smoothly once user scrolls down
+      const isPastFrontPage = window.scrollY > 40;
+      setVisible(isPastFrontPage);
 
-      const sections = ['hero', 'about', 'projects', 'skills', 'milestones', 'contact'];
-      const scrollPos = window.scrollY + 200;
+      const step = window.innerHeight;
+      const scrollY = window.scrollY;
 
-      for (const sectionId of sections) {
-        const el = document.getElementById(sectionId);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPos >= top && scrollPos < top + height) {
-            setActiveSection(sectionId);
-            break;
-          }
-        }
+      if (scrollY < step * 0.5) {
+        setActiveSection('');
+      } else if (scrollY < step * 1.5) {
+        setActiveSection('projects');
+      } else if (scrollY < step * 2.5) {
+        setActiveSection('skills');
+      } else if (scrollY < step * 3.5) {
+        setActiveSection('milestones');
+      } else {
+        setActiveSection('contact');
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -43,18 +53,41 @@ export const Navbar: React.FC<NavbarProps> = ({ raceMode, setRaceMode }) => {
   };
 
   const handleRaceModeToggle = () => {
-    sound.playClick();
+    sound.playF1EngineRev();
     setRaceMode(prev => !prev);
   };
 
   const navLinks = [
-    { id: 'hero', label: '01 // TELEMETRY' },
-    { id: 'about', label: '02 // BIOGRAPHY' },
-    { id: 'projects', label: '03 // PROJECTS' },
-    { id: 'skills', label: '04 // PIT-STOP' },
-    { id: 'milestones', label: '05 // RACE-LOG' },
-    { id: 'contact', label: '06 // CONTACT' }
+    { id: 'projects', label: '01 // PROJECTS' },
+    { id: 'skills', label: '02 // PIT-STOP' },
+    { id: 'milestones', label: '03 // RACE-LOG' },
+    { id: 'contact', label: '04 // CONTACT' }
   ];
+
+  const handleNavClick = (e: React.MouseEvent, sectionId: string) => {
+    e.preventDefault();
+    sound.playGearShift();
+    setMobileMenuOpen(false);
+
+    const sectionIndexMap: Record<string, number> = {
+      projects: 1,
+      skills: 2,
+      milestones: 3,
+      contact: 4
+    };
+
+    const idx = sectionIndexMap[sectionId];
+    if (idx !== undefined && window.innerWidth >= 769) {
+      window.dispatchEvent(new CustomEvent('portfolio-navigate', { detail: { index: idx } }));
+      const targetScroll = window.innerHeight * idx;
+      window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    } else {
+      const el = document.getElementById(sectionId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
 
   return (
     <header
@@ -63,19 +96,27 @@ export const Navbar: React.FC<NavbarProps> = ({ raceMode, setRaceMode }) => {
         top: 0,
         left: 0,
         right: 0,
-        zIndex: 900,
-        backgroundColor: scrolled ? 'rgba(7, 7, 9, 0.9)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(16px)' : 'none',
-        WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
-        borderBottom: scrolled ? '1px solid var(--border-subtle)' : '1px solid transparent',
-        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+        zIndex: 1000,
+        backgroundColor: 'rgba(7, 7, 10, 0.95)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.7)',
+        transform: visible ? 'translateY(0)' : 'translateY(-100%)',
+        opacity: visible ? 1 : 0,
+        pointerEvents: visible ? 'auto' : 'none',
+        transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease'
       }}
     >
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '4.5rem' }}>
         {/* Brand / Callout */}
         <a
           href="#hero"
-          onClick={() => sound.playClick()}
+          onClick={(e) => {
+            e.preventDefault();
+            sound.playClick();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -103,7 +144,7 @@ export const Navbar: React.FC<NavbarProps> = ({ raceMode, setRaceMode }) => {
             AY
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '0.95rem', letterSpacing: '0.05em' }}>
+            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '0.95rem', letterSpacing: '0.05em', color: '#ffffff' }}>
               ARNAV YADAV
             </span>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: 'var(--accent-racing)', letterSpacing: '0.12em' }}>
@@ -119,7 +160,7 @@ export const Navbar: React.FC<NavbarProps> = ({ raceMode, setRaceMode }) => {
               <li key={link.id}>
                 <a
                   href={`#${link.id}`}
-                  onClick={() => sound.playClick()}
+                  onClick={(e) => handleNavClick(e, link.id)}
                   onMouseEnter={() => sound.playHover()}
                   style={{
                     fontFamily: 'var(--font-mono)',
@@ -127,7 +168,7 @@ export const Navbar: React.FC<NavbarProps> = ({ raceMode, setRaceMode }) => {
                     fontWeight: 700,
                     letterSpacing: '0.08em',
                     textDecoration: 'none',
-                    color: activeSection === link.id ? 'var(--accent-racing)' : 'var(--text-secondary)',
+                    color: activeSection === link.id ? 'var(--accent-racing)' : '#d0d4dc',
                     position: 'relative',
                     padding: '0.4rem 0',
                     transition: 'color var(--transition-fast)'
@@ -154,7 +195,7 @@ export const Navbar: React.FC<NavbarProps> = ({ raceMode, setRaceMode }) => {
         </nav>
 
         {/* Action Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
           {/* Race Mode Toggle */}
           <button
             onClick={handleRaceModeToggle}
@@ -165,9 +206,9 @@ export const Navbar: React.FC<NavbarProps> = ({ raceMode, setRaceMode }) => {
               alignItems: 'center',
               gap: '0.35rem',
               padding: '0.45rem 0.75rem',
-              backgroundColor: raceMode ? 'var(--accent-racing)' : 'rgba(255, 255, 255, 0.05)',
-              color: raceMode ? '#000' : 'var(--text-white)',
-              border: raceMode ? '1px solid var(--accent-racing)' : '1px solid var(--border-subtle)',
+              backgroundColor: raceMode ? 'var(--accent-racing)' : 'rgba(255, 255, 255, 0.08)',
+              color: raceMode ? '#000' : '#ffffff',
+              border: raceMode ? '1px solid var(--accent-racing)' : '1px solid rgba(255, 255, 255, 0.15)',
               borderRadius: '2px',
               fontFamily: 'var(--font-mono)',
               fontSize: '0.7rem',
@@ -191,9 +232,9 @@ export const Navbar: React.FC<NavbarProps> = ({ raceMode, setRaceMode }) => {
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: audioEnabled ? 'rgba(212, 255, 0, 0.12)' : 'rgba(255, 255, 255, 0.05)',
-              color: audioEnabled ? 'var(--accent-racing)' : 'var(--text-muted)',
-              border: audioEnabled ? '1px solid var(--accent-racing)' : '1px solid var(--border-subtle)',
+              backgroundColor: audioEnabled ? 'rgba(212, 255, 0, 0.15)' : 'rgba(255, 255, 255, 0.08)',
+              color: audioEnabled ? 'var(--accent-racing)' : '#d0d4dc',
+              border: audioEnabled ? '1px solid var(--accent-racing)' : '1px solid rgba(255, 255, 255, 0.15)',
               borderRadius: '2px',
               cursor: 'pointer',
               transition: 'all var(--transition-fast)'
@@ -201,6 +242,32 @@ export const Navbar: React.FC<NavbarProps> = ({ raceMode, setRaceMode }) => {
           >
             {audioEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
           </button>
+
+          {/* LinkedIn Icon Link */}
+          <a
+            href="https://www.linkedin.com/in/arnav-yadav-956156334/"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Arnav Yadav on LinkedIn"
+            aria-label="LinkedIn Profile"
+            onClick={() => sound.playClick()}
+            onMouseEnter={() => sound.playHover()}
+            style={{
+              width: '34px',
+              height: '34px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(255, 255, 255, 0.08)',
+              color: '#38bdf8',
+              border: '1px solid rgba(56, 189, 248, 0.35)',
+              borderRadius: '2px',
+              textDecoration: 'none',
+              transition: 'all var(--transition-fast)'
+            }}
+          >
+            <Linkedin size={16} />
+          </a>
 
           {/* GitHub Icon Link */}
           <a
@@ -217,9 +284,9 @@ export const Navbar: React.FC<NavbarProps> = ({ raceMode, setRaceMode }) => {
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(255, 255, 255, 0.05)',
-              color: 'var(--text-white)',
-              border: '1px solid var(--border-subtle)',
+              backgroundColor: 'rgba(255, 255, 255, 0.08)',
+              color: '#ffffff',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
               borderRadius: '2px',
               textDecoration: 'none',
               transition: 'all var(--transition-fast)'
@@ -238,9 +305,9 @@ export const Navbar: React.FC<NavbarProps> = ({ raceMode, setRaceMode }) => {
               justifyContent: 'center',
               width: '34px',
               height: '34px',
-              backgroundColor: 'transparent',
-              color: 'var(--text-white)',
-              border: '1px solid var(--border-subtle)',
+              backgroundColor: 'rgba(255, 255, 255, 0.08)',
+              color: '#ffffff',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
               borderRadius: '2px',
               cursor: 'pointer'
             }}
@@ -255,26 +322,23 @@ export const Navbar: React.FC<NavbarProps> = ({ raceMode, setRaceMode }) => {
       {mobileMenuOpen && (
         <div
           style={{
-            backgroundColor: 'rgba(10, 10, 14, 0.98)',
-            borderBottom: '1px solid var(--border-subtle)',
+            backgroundColor: 'rgba(9, 9, 13, 0.98)',
+            borderBottom: '1px solid var(--border-accent)',
             padding: '1.5rem',
             backdropFilter: 'blur(20px)'
           }}
         >
-          <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
             {navLinks.map(link => (
               <li key={link.id}>
                 <a
                   href={`#${link.id}`}
-                  onClick={() => {
-                    sound.playClick();
-                    setMobileMenuOpen(false);
-                  }}
+                  onClick={(e) => handleNavClick(e, link.id)}
                   style={{
                     fontFamily: 'var(--font-mono)',
                     fontSize: '0.9rem',
                     fontWeight: 700,
-                    color: activeSection === link.id ? 'var(--accent-racing)' : 'var(--text-white)',
+                    color: activeSection === link.id ? 'var(--accent-racing)' : '#ffffff',
                     textDecoration: 'none',
                     display: 'block',
                     padding: '0.5rem 0'
@@ -285,6 +349,58 @@ export const Navbar: React.FC<NavbarProps> = ({ raceMode, setRaceMode }) => {
               </li>
             ))}
           </ul>
+
+          {/* Mobile Socials */}
+          <div style={{ display: 'flex', gap: '0.75rem', paddingTop: '1rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <a
+              href="https://www.linkedin.com/in/arnav-yadav-956156334/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                padding: '0.6rem',
+                backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                color: '#38bdf8',
+                border: '1px solid rgba(56, 189, 248, 0.4)',
+                borderRadius: '3px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                textDecoration: 'none'
+              }}
+            >
+              <Linkedin size={16} />
+              <span>LINKEDIN</span>
+            </a>
+            <a
+              href="https://github.com/Arnav876"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                padding: '0.6rem',
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                color: '#ffffff',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                borderRadius: '3px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                textDecoration: 'none'
+              }}
+            >
+              <Github size={16} />
+              <span>GITHUB</span>
+            </a>
+          </div>
         </div>
       )}
 

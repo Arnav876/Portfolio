@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserCheck, Binary, CheckCircle2, ArrowRight } from 'lucide-react';
+import { UserCheck, Binary, CheckCircle2, ArrowRight, Linkedin, ArrowUpRight } from 'lucide-react';
 import { sound } from '../utils/audio';
 
 export const About: React.FC = () => {
@@ -94,10 +94,10 @@ export const About: React.FC = () => {
                 </div>
               </div>
 
-              {/* Exact Normal Portrait: WhatsApp Image 2026-10-23 at 16.42.23.jpeg */}
+              {/* Verified Studio Portrait */}
               <div style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
                 <img
-                  src="/WhatsApp Image 2026-10-23 at 16.42.23.jpeg"
+                  src="/arnav-portrait.png"
                   alt="Arnav Yadav - Systems & Full-Stack Engineer"
                   loading="lazy"
                   style={{
@@ -240,6 +240,25 @@ export const About: React.FC = () => {
                 onMouseEnter={() => sound.playHover()}
               >
                 <span>GET IN TOUCH</span>
+              </a>
+              <a
+                href="https://www.linkedin.com/in/arnav-yadav-956156334/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary"
+                onClick={() => sound.playClick()}
+                onMouseEnter={() => sound.playHover()}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.45rem',
+                  color: '#38bdf8',
+                  borderColor: 'rgba(56, 189, 248, 0.45)'
+                }}
+              >
+                <Linkedin size={15} />
+                <span>LINKEDIN</span>
+                <ArrowUpRight size={13} />
               </a>
             </div>
           </div>

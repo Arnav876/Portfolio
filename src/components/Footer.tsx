@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUp, Shield, Github } from 'lucide-react';
+import { ArrowUp, Shield, Github, Linkedin } from 'lucide-react';
 import { sound } from '../utils/audio';
 
 export const Footer: React.FC = () => {
@@ -62,6 +62,26 @@ export const Footer: React.FC = () => {
           {/* Quick Nav & Back to Top */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
             <a
+              href="https://www.linkedin.com/in/arnav-yadav-956156334/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => sound.playClick()}
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.75rem',
+                color: 'var(--text-secondary)',
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                transition: 'color var(--transition-fast)'
+              }}
+            >
+              <Linkedin size={14} color="#38bdf8" />
+              <span>LINKEDIN</span>
+            </a>
+
+            <a
               href="https://github.com/Arnav876"
               target="_blank"
               rel="noopener noreferrer"
@@ -73,7 +93,8 @@ export const Footer: React.FC = () => {
                 textDecoration: 'none',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.4rem'
+                gap: '0.4rem',
+                transition: 'color var(--transition-fast)'
               }}
             >
               <Github size={14} color="var(--accent-racing)" />

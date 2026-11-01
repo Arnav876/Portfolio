@@ -35,9 +35,14 @@ export const TelemetryHUD: React.FC<TelemetryHUDProps> = ({ raceMode, setRaceMod
 
     animId = requestAnimationFrame(calcFps);
 
+    const unsub = sound.subscribe((active) => {
+      setSoundActive(active);
+    });
+
     return () => {
       clearInterval(timer);
       cancelAnimationFrame(animId);
+      unsub();
     };
   }, []);
 
@@ -76,7 +81,7 @@ export const TelemetryHUD: React.FC<TelemetryHUDProps> = ({ raceMode, setRaceMod
       {/* Top Header Bar */}
       <div
         onClick={() => {
-          sound.playClick();
+          sound.playTelemetryScan();
           setIsCollapsed(prev => !prev);
         }}
         style={{

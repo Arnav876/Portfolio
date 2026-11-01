@@ -9,7 +9,7 @@ export const Projects: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [activeModalProject, setActiveModalProject] = useState<Project | null>(null);
 
-  const categories = ['ALL', 'AI & Optimization', 'Civic & Systems', 'Full-Stack Web'];
+  const categories = ['ALL', 'Civic & Systems', 'Full-Stack Web', 'AI & Optimization'];
 
   const filteredProjects = selectedCategory === 'ALL'
     ? PROJECTS_DATA
@@ -18,23 +18,23 @@ export const Projects: React.FC = () => {
   return (
     <section
       id="projects"
+      className="portfolio-section"
       style={{
-        paddingTop: '6.5rem',
-        paddingBottom: '6.5rem',
-        position: 'relative'
+        position: 'relative',
+        backgroundColor: 'var(--bg-surface)'
       }}
     >
-      <div className="container">
+      <div className="container" style={{ width: '100%' }}>
         {/* Section Header */}
-        <div className="section-header">
+        <div className="section-header" style={{ marginBottom: '0.85rem' }}>
           <div className="section-label">
             <span className="section-label-line" />
-            <span>03 // FEATURED TELEMETRY & REPOSITORIES</span>
+            <span>01 // FEATURED TELEMETRY & REPOSITORIES</span>
           </div>
-          <h2 className="section-title">
+          <h2 className="section-title" style={{ fontSize: 'clamp(1.4rem, 2.2vw, 1.85rem)', margin: '0.2rem 0' }}>
             ENGINEERED SYSTEMS & REPOSITORIES
           </h2>
-          <p className="section-desc">
+          <p className="section-desc" style={{ fontSize: '0.82rem', margin: 0, lineHeight: 1.35, maxWidth: '850px' }}>
             Production-grade platforms and open-source systems built with uncompromising performance,
             deterministic mathematical truth, and real-world civic impact.
           </p>
@@ -42,28 +42,29 @@ export const Projects: React.FC = () => {
 
         {/* Filter Navigation Tabs */}
         <div
+          className="projects-filter-tabs"
           style={{
             display: 'flex',
             flexWrap: 'wrap',
-            gap: '0.6rem',
-            marginBottom: '3rem',
+            gap: '0.5rem',
+            marginBottom: '0.85rem',
             borderBottom: '1px solid var(--border-subtle)',
-            paddingBottom: '1.25rem'
+            paddingBottom: '0.6rem'
           }}
         >
           {categories.map(cat => (
             <button
               key={cat}
               onClick={() => {
-                sound.playClick();
+                sound.playGearShift();
                 setSelectedCategory(cat);
               }}
               onMouseEnter={() => sound.playHover()}
               style={{
                 fontFamily: 'var(--font-mono)',
-                fontSize: '0.75rem',
+                fontSize: '0.68rem',
                 fontWeight: 700,
-                padding: '0.5rem 1rem',
+                padding: '0.35rem 0.75rem',
                 borderRadius: '2px',
                 border: selectedCategory === cat ? '1px solid var(--accent-racing)' : '1px solid var(--border-subtle)',
                 backgroundColor: selectedCategory === cat ? 'var(--accent-racing)' : 'rgba(255, 255, 255, 0.03)',
@@ -72,28 +73,29 @@ export const Projects: React.FC = () => {
                 transition: 'all var(--transition-fast)'
               }}
             >
-              {cat === 'ALL' ? 'ALL SECTORS [06]' : cat.toUpperCase()}
+              {cat === 'ALL' ? `ALL SECTORS [0${PROJECTS_DATA.length}]` : cat.toUpperCase()}
             </button>
           ))}
         </div>
 
         {/* Projects Grid */}
         <div
+          className="projects-grid"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
-            gap: '2rem'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: '1rem'
           }}
         >
           {filteredProjects.map((project) => (
             <div
               key={project.id}
-              className="tech-card corner-markers"
+              className="tech-card corner-markers project-card"
               style={{
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                padding: '2rem',
+                padding: '1.15rem',
                 position: 'relative'
               }}
             >
@@ -104,14 +106,14 @@ export const Projects: React.FC = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    marginBottom: '1.25rem'
+                    marginBottom: '0.65rem'
                   }}
                 >
                   <span className="telemetry-chip">{project.badge}</span>
                   <span
                     style={{
                       fontFamily: 'var(--font-mono)',
-                      fontSize: '0.7rem',
+                      fontSize: '0.68rem',
                       color: 'var(--text-muted)'
                     }}
                   >
@@ -123,10 +125,10 @@ export const Projects: React.FC = () => {
                 <h3
                   style={{
                     fontFamily: 'var(--font-display)',
-                    fontSize: '1.6rem',
+                    fontSize: '1.25rem',
                     fontWeight: 800,
                     color: 'var(--text-white)',
-                    marginBottom: '0.35rem',
+                    marginBottom: '0.2rem',
                     lineHeight: 1.2
                   }}
                 >
@@ -135,9 +137,9 @@ export const Projects: React.FC = () => {
                 <div
                   style={{
                     fontFamily: 'var(--font-mono)',
-                    fontSize: '0.8rem',
+                    fontSize: '0.75rem',
                     color: 'var(--accent-racing)',
-                    marginBottom: '1rem',
+                    marginBottom: '0.45rem',
                     fontWeight: 600
                   }}
                 >
@@ -147,9 +149,13 @@ export const Projects: React.FC = () => {
                 <p
                   style={{
                     color: 'var(--text-secondary)',
-                    fontSize: '0.9rem',
-                    lineHeight: 1.6,
-                    marginBottom: '1.5rem'
+                    fontSize: '0.8rem',
+                    lineHeight: 1.4,
+                    marginBottom: '0.65rem',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden'
                   }}
                 >
                   {project.tagline}
@@ -158,8 +164,8 @@ export const Projects: React.FC = () => {
                 {/* Invariants snippet */}
                 <div
                   style={{
-                    marginBottom: '1.5rem',
-                    padding: '0.85rem',
+                    marginBottom: '0.65rem',
+                    padding: '0.5rem 0.65rem',
                     backgroundColor: 'rgba(255, 255, 255, 0.02)',
                     border: '1px solid var(--border-subtle)',
                     borderRadius: '4px'
@@ -168,11 +174,11 @@ export const Projects: React.FC = () => {
                   <div
                     style={{
                       fontFamily: 'var(--font-mono)',
-                      fontSize: '0.68rem',
+                      fontSize: '0.62rem',
                       color: 'var(--text-muted)',
                       textTransform: 'uppercase',
                       letterSpacing: '0.08em',
-                      marginBottom: '0.5rem'
+                      marginBottom: '0.25rem'
                     }}
                   >
                     Key Architectural Rule:
@@ -180,15 +186,18 @@ export const Projects: React.FC = () => {
                   <div
                     style={{
                       fontFamily: 'var(--font-mono)',
-                      fontSize: '0.78rem',
+                      fontSize: '0.72rem',
                       color: 'var(--text-white)',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '0.4rem'
+                      gap: '0.4rem',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap'
                     }}
                   >
-                    <CheckCircle2 size={13} color="var(--accent-racing)" style={{ flexShrink: 0 }} />
-                    <span>{project.keyInvariants[0]}</span>
+                    <CheckCircle2 size={12} color="var(--accent-racing)" style={{ flexShrink: 0 }} />
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{project.keyInvariants[0]}</span>
                   </div>
                 </div>
 
@@ -197,8 +206,8 @@ export const Projects: React.FC = () => {
                   style={{
                     display: 'flex',
                     flexWrap: 'wrap',
-                    gap: '0.4rem',
-                    marginBottom: '1.75rem'
+                    gap: '0.35rem',
+                    marginBottom: '0.85rem'
                   }}
                 >
                   {project.techStack.map((tech, idx) => (
@@ -206,8 +215,8 @@ export const Projects: React.FC = () => {
                       key={idx}
                       style={{
                         fontFamily: 'var(--font-mono)',
-                        fontSize: '0.7rem',
-                        padding: '0.2rem 0.55rem',
+                        fontSize: '0.65rem',
+                        padding: '0.15rem 0.45rem',
                         backgroundColor: 'rgba(255, 255, 255, 0.04)',
                         border: '1px solid var(--border-subtle)',
                         borderRadius: '2px',
@@ -226,35 +235,35 @@ export const Projects: React.FC = () => {
                   style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(3, 1fr)',
-                    gap: '0.5rem',
-                    paddingTop: '1rem',
+                    gap: '0.4rem',
+                    paddingTop: '0.65rem',
                     borderTop: '1px solid var(--border-subtle)',
-                    marginBottom: '1.25rem'
+                    marginBottom: '0.85rem'
                   }}
                 >
                   {project.metrics.map((m, idx) => (
                     <div key={idx}>
-                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', color: 'var(--text-muted)' }}>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', color: 'var(--text-muted)' }}>
                         {m.label}
                       </div>
-                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-white)' }}>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-white)' }}>
                         {m.value}
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                   <button
                     onClick={() => {
-                      sound.playClick();
+                      sound.playTelemetryLap();
                       setActiveModalProject(project);
                     }}
                     onMouseEnter={() => sound.playHover()}
                     className="btn-primary"
-                    style={{ flex: 1, justifyContent: 'center', padding: '0.7rem 1rem', fontSize: '0.75rem' }}
+                    style={{ flex: 1, justifyContent: 'center', padding: '0.5rem 0.75rem', fontSize: '0.72rem' }}
                   >
-                    <Layers size={14} />
+                    <Layers size={13} />
                     <span>DEEP DIVE</span>
                   </button>
 
@@ -262,14 +271,14 @@ export const Projects: React.FC = () => {
                     href={project.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={() => sound.playClick()}
+                    onClick={() => sound.playDrsBeep()}
                     onMouseEnter={() => sound.playHover()}
                     className="btn-secondary"
                     title={`View ${project.title} on GitHub`}
-                    style={{ padding: '0.7rem 0.9rem' }}
+                    style={{ padding: '0.5rem 0.75rem' }}
                   >
-                    <Github size={15} />
-                    <ArrowUpRight size={13} />
+                    <Github size={14} />
+                    <ArrowUpRight size={12} />
                   </a>
                 </div>
               </div>

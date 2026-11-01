@@ -1,6 +1,7 @@
 import React from 'react';
 import { Cpu, Layout, Server, Layers } from 'lucide-react';
 import { SKILL_CATEGORIES } from '../data/skills';
+import { sound } from '../utils/audio';
 
 export const Skills: React.FC = () => {
   const getIcon = (name: string) => {
@@ -20,26 +21,23 @@ export const Skills: React.FC = () => {
   return (
     <section
       id="skills"
+      className="portfolio-section"
       style={{
-        paddingTop: '6.5rem',
-        paddingBottom: '6.5rem',
         position: 'relative',
-        backgroundColor: 'rgba(10, 10, 14, 0.4)',
-        borderTop: '1px solid var(--border-subtle)',
-        borderBottom: '1px solid var(--border-subtle)'
+        backgroundColor: 'var(--bg-surface)'
       }}
     >
-      <div className="container">
+      <div className="container" style={{ width: '100%' }}>
         {/* Section Header */}
-        <div className="section-header">
+        <div className="section-header" style={{ marginBottom: '1.15rem' }}>
           <div className="section-label">
             <span className="section-label-line" />
-            <span>04 // PIT-STOP & TECHNICAL CAPABILITIES</span>
+            <span>02 // PIT-STOP & TECHNICAL CAPABILITIES</span>
           </div>
-          <h2 className="section-title">
+          <h2 className="section-title" style={{ fontSize: 'clamp(1.5rem, 2.4vw, 2.05rem)', margin: '0.25rem 0' }}>
             TECHNICAL POWERTRAIN & TELEMETRY
           </h2>
-          <p className="section-desc">
+          <p className="section-desc" style={{ fontSize: '0.88rem', margin: 0, lineHeight: 1.4, maxWidth: '900px' }}>
             Granular breakdown of languages, engineering environments, frameworks, and architecture patterns
             utilized across my production systems.
           </p>
@@ -47,21 +45,25 @@ export const Skills: React.FC = () => {
 
         {/* Sectors Grid */}
         <div
+          className="skills-grid"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '2rem'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '1.25rem'
           }}
         >
           {SKILL_CATEGORIES.map((cat, idx) => (
             <div
               key={idx}
-              className="tech-card corner-markers"
+              className="tech-card corner-markers skill-card"
+              onMouseEnter={() => sound.playHover()}
+              onClick={() => sound.playTelemetryScan()}
               style={{
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                padding: '2rem'
+                padding: '1.5rem 1.6rem',
+                cursor: 'pointer'
               }}
             >
               <div>
@@ -71,9 +73,9 @@ export const Skills: React.FC = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    marginBottom: '1.25rem',
+                    marginBottom: '0.85rem',
                     borderBottom: '1px solid var(--border-subtle)',
-                    paddingBottom: '0.85rem'
+                    paddingBottom: '0.65rem'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
@@ -81,8 +83,9 @@ export const Skills: React.FC = () => {
                     <span
                       style={{
                         fontFamily: 'var(--font-mono)',
-                        fontSize: '0.75rem',
-                        fontWeight: 700,
+                        fontSize: '0.8rem',
+                        fontWeight: 800,
+                        letterSpacing: '0.06em',
                         color: 'var(--accent-racing)'
                       }}
                     >
@@ -92,7 +95,8 @@ export const Skills: React.FC = () => {
                   <span
                     style={{
                       fontFamily: 'var(--font-mono)',
-                      fontSize: '0.65rem',
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
                       color: 'var(--telemetry-green)'
                     }}
                   >
@@ -103,17 +107,18 @@ export const Skills: React.FC = () => {
                 <h3
                   style={{
                     fontFamily: 'var(--font-display)',
-                    fontSize: '1.25rem',
+                    fontSize: '1.28rem',
                     fontWeight: 800,
                     color: 'var(--text-white)',
-                    marginBottom: '1.5rem'
+                    marginBottom: '1.15rem',
+                    lineHeight: 1.25
                   }}
                 >
                   {cat.title}
                 </h3>
 
                 {/* Skills list */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.95rem' }}>
                   {cat.skills.map((skill, sIdx) => (
                     <div key={sIdx}>
                       <div
@@ -121,13 +126,13 @@ export const Skills: React.FC = () => {
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'space-between',
-                          marginBottom: '0.35rem'
+                          marginBottom: '0.28rem'
                         }}
                       >
-                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-white)' }}>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-white)' }}>
                           {skill.name}
                         </span>
-                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--accent-racing)' }}>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', fontWeight: 800, color: 'var(--accent-racing)' }}>
                           {skill.level}
                         </span>
                       </div>
@@ -140,7 +145,7 @@ export const Skills: React.FC = () => {
                           backgroundColor: 'rgba(255, 255, 255, 0.08)',
                           borderRadius: '2px',
                           overflow: 'hidden',
-                          marginBottom: '0.4rem'
+                          marginBottom: '0.32rem'
                         }}
                       >
                         <div
@@ -148,13 +153,13 @@ export const Skills: React.FC = () => {
                             width: `${skill.levelPercent}%`,
                             height: '100%',
                             backgroundColor: 'var(--accent-racing)',
-                            boxShadow: '0 0 8px var(--accent-racing)',
+                            boxShadow: '0 0 10px rgba(212, 255, 0, 0.4)',
                             borderRadius: '2px'
                           }}
                         />
                       </div>
 
-                      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-secondary)', lineHeight: 1.35 }}>
+                      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.76rem', color: 'var(--text-secondary)', lineHeight: 1.35, margin: 0 }}>
                         {skill.description}
                       </p>
                     </div>
