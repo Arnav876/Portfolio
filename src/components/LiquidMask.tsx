@@ -620,8 +620,6 @@ export const LiquidMask: React.FC<LiquidMaskProps> = ({
     let isIntersecting = true;
     let isPageVisible = document.visibilityState === 'visible';
     let hoverActive = false;
-    let lastMoveTime = 0;
-    let hasMouseMoved = false;
     let targetProgress = 0;
     let rafId = 0;
     const clock = new Clock();
@@ -700,12 +698,8 @@ export const LiquidMask: React.FC<LiquidMaskProps> = ({
       const gl = renderer.getContext();
       gl.disable(gl.BLEND);
 
-      // Check for idle mouse: if cursor has stopped moving for > 1.2s, smoothly dissipate
-      const speed = Math.hypot(mouseVelocity.x, mouseVelocity.y);
-      const isIdle = performance.now() - lastMoveTime > 1200;
-      if (isIdle || !hoverActive) {
-        targetProgress = 0;
-      }
+      // Keep targetProgress active as long as cursor is hovering over hero
+      targetProgress = hoverActive ? 1 : 0;
 
       // 1) Splat velocity
       splatVelMaterial.uniforms.u_point.value.set(mouseTarget.x, mouseTarget.y);
@@ -717,9 +711,8 @@ export const LiquidMask: React.FC<LiquidMaskProps> = ({
       renderer.setRenderTarget(velFBO1);
       renderer.render(fluidScene, orthoCamera);
 
-      // 2) Splat density - only inject new density when mouse is actively moving
-      const densityAmt = (hoverActive && !isIdle && (speed > 0.0003 || hasMouseMoved)) ? 1.0 : 0.0;
-      hasMouseMoved = false;
+      // 2) Splat density - active and continuously animating in front while hovering
+      const densityAmt = hoverActive ? 1.0 : 0.0;
 
       splatDensityMaterial.uniforms.u_point.value.set(mouseTarget.x, mouseTarget.y);
       splatDensityMaterial.uniforms.u_aspectRatio.value = containerAspect;
@@ -865,8 +858,6 @@ export const LiquidMask: React.FC<LiquidMaskProps> = ({
       const ny = Math.max(0, Math.min(1, y));
 
       uniforms.u_mouse.value.set(nx, ny);
-      lastMoveTime = performance.now();
-      hasMouseMoved = true;
       hoverActive = true;
       targetProgress = 1;
 
@@ -904,8 +895,6 @@ export const LiquidMask: React.FC<LiquidMaskProps> = ({
       }
 
       hoverActive = true;
-      lastMoveTime = performance.now();
-      hasMouseMoved = true;
       targetProgress = 1;
 
       if (!isAnimating) {
