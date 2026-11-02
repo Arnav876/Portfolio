@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { ArrowDown, Linkedin, ArrowUpRight, Volume2, VolumeX, X, Zap, Github, Layers, Wrench, Trophy, Mail } from 'lucide-react';
 import { sound } from '../utils/audio';
 import { RaceBadge } from './RaceBadge';
-import { LiquidMask } from './LiquidMask';
 import { InteractiveWaveBackground } from './InteractiveWaveBackground';
 import { WireframeScaffold } from './WireframeScaffold';
+import { HeroBackgroundText } from './HeroBackgroundText';
+import { WireframeHelmet } from './WireframeHelmet';
 
 interface HeroProps {
   raceMode?: boolean;
@@ -77,13 +78,13 @@ export const Hero: React.FC<HeroProps> = ({ raceMode = false, setRaceMode }) => 
         backgroundColor: '#ffffff'
       }}
     >
-      {/* Dynamic 3D Wireframe Scaffold (Scanning Radar Dome behind head) */}
+      {/* 0. Dynamic 3D Wireframe Scaffold (Scanning Radar Dome behind head) */}
       <WireframeScaffold style={{ zIndex: 0 }} />
 
-      {/* Interactive Wave Background (the topographic contour side lines) */}
+      {/* 1. Interactive Wave Background (the topographic contour side lines) */}
       <InteractiveWaveBackground
-        strokeColor={raceMode ? 'rgba(255, 255, 255, 0.22)' : 'rgba(0, 0, 0, 0.14)'}
-        strokeWidth={1.25}
+        strokeColor={raceMode ? 'rgba(255, 255, 255, 0.28)' : 'rgba(0, 0, 0, 0.16)'}
+        strokeWidth={1.35}
         lineSpacing={0.85}
         resolution={0.7}
         waveSpeed={0.5}
@@ -92,30 +93,41 @@ export const Hero: React.FC<HeroProps> = ({ raceMode = false, setRaceMode }) => 
         style={{ zIndex: 1 }}
       />
 
-      {/* Interactive WebGL Helmet Reveal (Liquid Mask) */}
+      {/* 2. Hero Background Text (Large Headline Ticker Watermark + Technical Dotted Line + Focus Areas) */}
+      <HeroBackgroundText raceMode={raceMode} />
+
+      {/* 3. Base Portrait Photo */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
           width: '100%',
           height: '100%',
-          zIndex: 2,
-          backgroundColor: 'transparent'
+          zIndex: 3,
+          pointerEvents: 'none',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}
       >
-        <LiquidMask
-          imageBase={{ src: '/assets/hero/face.png', alt: 'Arnav Yadav' }}
-          imageHover={{ src: '/assets/hero/helmet.webp', alt: 'Arnav Yadav Racing Helmet' }}
-          curl={75}
-          circleBoost={0.4}
-          texture={0.4}
-          shrinkTimeSeconds={2}
-          splatRadius={0.11}
-          parallax={true}
-          parallaxAmount={5}
-          parallaxSmoothing={1}
+        <img
+          src="/assets/hero/face.png"
+          alt="Arnav Yadav"
+          draggable={false}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: '50% 50%',
+            margin: 0,
+            padding: 0,
+            userSelect: 'none'
+          }}
         />
       </div>
+
+      {/* 4. Animated Wireframe Helmet (Descent on load, mouse 3D tilt, scroll lift/fade, idle float) */}
+      <WireframeHelmet raceMode={raceMode} style={{ zIndex: 4 }} />
 
       {/* Hero UI Overlay Container - pointer-events: none allows mouse to interact with canvas */}
       <div className="hero-overlay-container">

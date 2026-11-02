@@ -95,8 +95,8 @@ interface PointData {
 }
 
 export const InteractiveWaveBackground: React.FC<InteractiveWaveBackgroundProps> = ({
-  strokeColor = 'rgba(0, 0, 0, 0.14)',
-  strokeWidth = 1.25,
+  strokeColor = 'rgba(0, 0, 0, 0.18)',
+  strokeWidth = 1.35,
   backgroundColor = 'transparent',
   waveSpeed = 0.5,
   waveAmplitude = 0.6,
@@ -247,6 +247,13 @@ export const InteractiveWaveBackground: React.FC<InteractiveWaveBackgroundProps>
     updatePhysics(0);
     renderLines();
 
+    // Secondary build pass on next frame ensures accurate clientWidth after DOM paint
+    requestAnimationFrame(() => {
+      buildLines();
+      updatePhysics(0);
+      renderLines();
+    });
+
     const tick = (time: number) => {
       if (!isIntersectingRef.current) {
         rafRef.current = null;
@@ -298,12 +305,13 @@ export const InteractiveWaveBackground: React.FC<InteractiveWaveBackgroundProps>
       }
     };
 
-    const heroEl = container.closest('#hero') || container;
-    heroEl.addEventListener('mousemove', onMouseMove as EventListener);
-    heroEl.addEventListener('touchmove', onTouchMove as EventListener, { passive: true });
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
 
     const onResize = () => {
       buildLines();
+      updatePhysics(0);
+      renderLines();
     };
     window.addEventListener('resize', onResize);
 
@@ -314,13 +322,13 @@ export const InteractiveWaveBackground: React.FC<InteractiveWaveBackgroundProps>
           rafRef.current = requestAnimationFrame(tick);
         }
       });
-    }, { threshold: 0.05 });
+    }, { threshold: 0.01, rootMargin: '100px' });
     observer.observe(container);
 
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      heroEl.removeEventListener('mousemove', onMouseMove as EventListener);
-      heroEl.removeEventListener('touchmove', onTouchMove as EventListener);
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('resize', onResize);
       observer.disconnect();
     };

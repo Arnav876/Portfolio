@@ -25,8 +25,8 @@ export const Cursor: React.FC = () => {
     let animationFrameId: number;
     let lastTime = performance.now();
 
-    const updateHoverState = (target: HTMLElement | null) => {
-      if (!target) {
+    const updateHoverState = (target: any) => {
+      if (!target || typeof target.closest !== 'function') {
         container.classList.remove('cursor-hover');
         return;
       }

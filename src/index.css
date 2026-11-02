@@ -803,3 +803,41 @@ body.race-mode .hero-menu-btn .menu-bar {
     grid-column: span 12 !important;
   }
 }
+
+/* ==========================================================================
+   HERO BACKGROUND MARQUEE TEXT ANIMATIONS
+   ========================================================================== */
+
+@keyframes heroMarqueeScrollLeft {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes heroMarqueeScrollRight {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.hero-ticker-left {
+  animation: heroMarqueeScrollLeft 32s linear infinite;
+}
+
+.hero-ticker-right {
+  animation: heroMarqueeScrollRight 38s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-ticker-left,
+  .hero-ticker-right {
+    animation: none !important;
+  }
+}
+
