@@ -29,3 +29,5 @@ dist-ssr
 .cursor/hooks.json
 .antideploy.json
 
+.vercel
+.env*
