@@ -1,55 +1,79 @@
-import React, { useState, useEffect } from 'react';
-import { Cursor } from './components/Cursor';
-import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { Projects } from './components/Projects';
-import { Skills } from './components/Skills';
-import { Milestones } from './components/Milestones';
-import { Contact } from './components/Contact';
-import { Footer } from './components/Footer';
-import { TelemetryHUD } from './components/TelemetryHUD';
-import { ScrollStack } from './components/ScrollStack';
+import { useCallback, useEffect, useState } from 'react'
+import { initLenis, destroyLenis } from './motion/lenis'
+import { RouterProvider, useRouter } from './router'
+import ProjectsPage from './pages/ProjectsPage'
+import Hero from './components/Hero'
+import Features from './components/Features'
+import HorizontalScroll from './components/HorizontalScroll'
+import EnterProjects from './components/EnterProjects'
+import CodeActivity from './components/CodeActivity'
+import Story from './components/Story'
+import Contact from './components/Contact'
+import Nav from './components/Nav'
+import KeyboardNav from './components/KeyboardNav'
 
-export const App: React.FC = () => {
-  const [raceMode, setRaceMode] = useState<boolean>(false);
+function PortfolioContent() {
+  const { path } = useRouter()
+  // Bumping the hero key remounts Hero, so the opening slide
+  // replays from the beginning (used by the Backspace shortcut).
+  const [heroKey, setHeroKey] = useState(0)
+  const replayHome = useCallback(() => setHeroKey((k) => k + 1), [])
 
-  useEffect(() => {
-    if (raceMode) {
-      document.body.classList.add('race-mode');
-    } else {
-      document.body.classList.remove('race-mode');
-    }
-  }, [raceMode]);
+  if (path === '/projects' || path.startsWith('/projects/')) {
+    return (
+      <>
+        <KeyboardNav onReplayHome={replayHome} />
+        <ProjectsPage />
+      </>
+    )
+  }
 
   return (
-    <div className="portfolio-app" style={{ minHeight: '100vh', position: 'relative' }}>
-      {/* Subtle Grain Texture Overlay */}
-      <div className="grain-overlay" aria-hidden="true" />
+    <>
+      <KeyboardNav onReplayHome={replayHome} />
+      <main id="top" className="min-h-screen bg-paper font-body text-ink">
+        {/* Fixed top nav — Skills / Journey / Projects / Contact + Back to top */}
+        <Nav />
 
-      {/* Custom Precision Motorsport Cursor */}
-      <Cursor />
+        {/* Scene 1 — Hero transition opening */}
+        <Hero key={heroKey} />
 
-      {/* Fixed Telemetry Navigation */}
-      <Navbar raceMode={raceMode} setRaceMode={setRaceMode} />
+        {/* ENTER key + projects teaser — right after the intro.
+            The horizontal Works gallery no longer lives on the home
+            page; it is only on the /projects page. */}
+        <EnterProjects />
 
-      {/* Main Content Sections with GSAP ScrollStack */}
-      <main id="main-content">
-        <ScrollStack>
-          <Hero raceMode={raceMode} setRaceMode={setRaceMode} />
-          <Projects />
-          <Skills />
-          <Milestones />
-          <Contact />
-        </ScrollStack>
+        {/* Features bento grid — skills */}
+        <Features />
+
+        {/* Horizontal scrolling section — after Features */}
+        <HorizontalScroll />
+
+        {/* GitHub contributions graph — between Sideways and Story */}
+        <CodeActivity />
+
+        {/* Story pinned scroll — between Sideways and Contact */}
+        <Story />
+
+        {/* Scene 4 — Contact */}
+        <Contact />
       </main>
+    </>
+  )
+}
 
-      {/* Telemetry Footer */}
-      <Footer />
+export default function App() {
+  // Lenis smooth scroll, driven by the GSAP ticker (see src/motion/lenis.ts)
+  useEffect(() => {
+    initLenis()
+    return () => {
+      destroyLenis()
+    }
+  }, [])
 
-      {/* Floating Motorsport Lap & Telemetry HUD */}
-      <TelemetryHUD raceMode={raceMode} setRaceMode={setRaceMode} />
-    </div>
-  );
-};
-
-export default App;
+  return (
+    <RouterProvider>
+      <PortfolioContent />
+    </RouterProvider>
+  )
+}

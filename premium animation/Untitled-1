@@ -1,0 +1,34 @@
+Set up the scroll-animation stack for my React portfolio. Do NOT build the full site yet — only install and wire the tools, then verify.
+
+1. Check this project first. If there is no Vite + React 19 + TypeScript + Tailwind CSS v4 project here, create one. If one already exists, keep it and do not overwrite my content.
+
+2. Install the agent skills for GSAP in Antigravity:
+   Run: npx skills add https://github.com/greensock/gsap-skills --agent antigravity
+   Also add it as a Remote Rule from GitHub: greensock/gsap-skills
+   I need these skills available: gsap-core, gsap-timeline, gsap-scrolltrigger, gsap-react, gsap-plugins.
+   If the skills command fails, clone it shallow and copy the skills folder into this project as reference:
+   git clone --depth=1 https://github.com/greensock/gsap-skills.git
+
+3. Install the libraries with these exact versions from my report:
+   npm install gsap@3.15.1 lenis@1.3.27 three@0.187.0
+   npm install -D @types/three @types/gsap
+
+   Lenis repo for reference: https://github.com/darkroomengineering/lenis
+   Three.js repo for reference: https://github.com/mrdoob/three.js
+   Do NOT clone the full Three.js repo into my project — it is ~2GB. Use npm only.
+
+4. Create the motion scaffold exactly like this:
+   - src/motion/gsap.ts — import gsap and ScrollTrigger, register ScrollTrigger once with ignoreMobileResize: true
+   - src/motion/lenis.ts — create Lenis with lerp: 0.08, smoothWheel: true, wheelMultiplier: 0.9, anchors: true. On scroll, call ScrollTrigger.update. Drive lenis.raf through gsap.ticker, and set gsap.ticker.lagSmoothing(0)
+   - src/motion/useGsap.ts — a React hook useGsap(setup, scope, deps) that wraps setup in gsap.context() so pins, timelines and listeners are cleaned up on unmount / StrictMode
+
+5. Wire Lenis + GSAP in App.tsx / main entry, but do NOT add any hero, about or works sections yet.
+
+6. Verify and report back:
+   - Show me the updated package.json dependencies
+   - Run npm run build and fix any errors
+   - Confirm the dev server starts and the page loads with no console errors
+   - List the files you created
+
+Stop after verification. Wait for my next prompt before building any animation scene.
+    

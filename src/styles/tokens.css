@@ -1,0 +1,213 @@
+@import "tailwindcss";
+
+@theme {
+  /* Design tokens — white / black / warm beige palette */
+  --color-paper: #fafafa;
+  --color-paper-2: #F5E9DC;
+  --color-ink: #0a0a0a;
+  --color-ink-soft: #525252;
+  --color-accent: #E6C3A5;
+  --color-accent-deep: #A67C52;
+  --color-dark: #0a0a0a;
+
+  --font-display: "Clash Display", "Satoshi", system-ui, sans-serif;
+  --font-body: "Satoshi", system-ui, sans-serif;
+  --font-serif: "Amulya", Georgia, serif;
+
+  /* Fluid display type */
+  --text-display: clamp(3.25rem, 11vw, 9.5rem);
+  --text-display--line-height: 0.92;
+  --text-display--letter-spacing: -0.02em;
+}
+
+:root {
+  color-scheme: light;
+  --paper: #fafafa;
+  --paper-2: #F5E9DC;
+  --ink: #0a0a0a;
+  --ink-soft: #525252;
+  --accent: #E6C3A5;
+  --accent-deep: #A67C52;
+  --dark: #0a0a0a;
+  --line: rgb(10 10 10 / 0.14);
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--accent);
+  color: #0a0a0a;
+}
+
+.hero-char {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Features bento — keyframes for the small CSS visuals (no JS needed) */
+@keyframes spin-cube {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+@keyframes scroll-dot {
+  from {
+    left: 0;
+  }
+  to {
+    left: calc(100% - 0.75rem);
+  }
+}
+
+/* HorizontalScroll — drifting arrow, slow spins, orbit + equaliser bars */
+@keyframes hs-drift-arrow {
+  0%,
+  100% {
+    transform: translateX(-0.35em);
+  }
+  50% {
+    transform: translateX(0.35em);
+  }
+}
+
+@keyframes hs-spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes hs-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes hs-eq-bar {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.hs-drift-arrow {
+  animation: hs-drift-arrow 2.4s ease-in-out infinite;
+}
+
+.hs-spin-slow {
+  animation: hs-spin-slow 14s linear infinite;
+}
+
+.hs-orbit {
+  animation: hs-orbit 7s linear infinite;
+}
+
+.hs-eq-bar {
+  transform-origin: bottom;
+  animation: hs-eq-bar 1.1s ease-in-out infinite;
+}
+
+/* Hero — slow ambient sway for the right-hand wavy lines.
+ * A composited transform only: each line drifts a few px on
+ * its own (own duration/delay set inline), so the void feels
+ * alive without any path rewrites. */
+@keyframes hero-line-sway {
+  from {
+    transform: translateX(-7px);
+  }
+  to {
+    transform: translateX(7px);
+  }
+}
+
+.hero-line-sway {
+  animation: hero-line-sway 16s ease-in-out infinite alternate;
+}
+
+/* Works cards — cursor-following sheen, warm beige only, barely there */
+.works-sheen {
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 50%),
+    rgb(230 195 165 / 0.16),
+    transparent 70%
+  );
+}
+
+/* Mask hover — circular reveal that trails the pointer (Framer-style).
+ * A child layer with .mask-reveal is clipped to a soft circle at
+ * --mx/--my and fades in only while its parent has .mask-active
+ * (set by the useMaskHover hook). Positions are in px, relative
+ * to the element, recomputed every frame so scrolling keeps working. */
+.mask-reveal {
+  -webkit-mask-image: radial-gradient(
+    circle 150px at var(--mx, 50%) var(--my, 50%),
+    #000 0%,
+    #000 55%,
+    transparent 75%
+  );
+  mask-image: radial-gradient(
+    circle 150px at var(--mx, 50%) var(--my, 50%),
+    #000 0%,
+    #000 55%,
+    transparent 75%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.mask-active .mask-reveal {
+  opacity: 1;
+}
+
+/* Warm second layer for dark tiles — brighter, warmer orbs than the
+ * procedural canvas underneath, revealed only inside the mask. */
+.mask-warm-blobs {
+  background:
+    radial-gradient(240px circle at 28% 26%, rgb(245 233 220 / 0.95), transparent 70%),
+    radial-gradient(280px circle at 74% 42%, rgb(230 195 165 / 0.9), transparent 70%),
+    radial-gradient(220px circle at 52% 82%, rgb(166 124 82 / 0.85), transparent 70%);
+}
+
+/* Warm second layer for light tiles — a warm beige wash under the cursor. */
+.mask-warm-wash {
+  background: linear-gradient(135deg, #e6c3a5 0%, #f5e9dc 60%, #e6c3a5 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hs-drift-arrow,
+  .hs-spin-slow,
+  .hs-orbit,
+  .hs-eq-bar {
+    animation: none;
+  }
+  .hero-line-sway {
+    animation: none;
+  }
+  .works-sheen {
+    display: none;
+  }
+  .mask-reveal {
+    display: none;
+  }
+}
